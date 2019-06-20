@@ -1,4 +1,4 @@
-#include "WebRunner.hpp"
+#pragma once
 
 #include "oatpp/web/client/HttpRequestExecutor.hpp"
 #include "oatpp/web/server/AsyncHttpConnectionHandler.hpp"
@@ -11,8 +11,14 @@
 #include "oatpp/network/virtual_/Interface.hpp"
 #include "oatpp/core/macro/component.hpp"
 
+class TestConfig {
+private:
+  v_int32 m_port;
+public:
 
-oatpp::test::web::ClientServerTestRunner WebRunner::create(int port) {
+  TestConfig(v_int32 port)
+    : m_port(port)
+  {}
 
   OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::async::Executor>, executor)([] {
     return std::make_shared<oatpp::async::Executor>(1, 1, 1);
@@ -22,15 +28,15 @@ oatpp::test::web::ClientServerTestRunner WebRunner::create(int port) {
     return oatpp::network::virtual_::Interface::createShared("virtualhost");
   }());
 
-  OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::network::ServerConnectionProvider>, serverConnectionProvider)([port] {
-    if(port == 0) {
+  OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::network::ServerConnectionProvider>, serverConnectionProvider)([this] {
+    if(m_port == 0) {
       OATPP_COMPONENT(std::shared_ptr<oatpp::network::virtual_::Interface>, interface);
       return std::static_pointer_cast<oatpp::network::ServerConnectionProvider>(
-          oatpp::network::virtual_::server::ConnectionProvider::createShared(interface)
+        oatpp::network::virtual_::server::ConnectionProvider::createShared(interface)
       );
     }
     return std::static_pointer_cast<oatpp::network::ServerConnectionProvider>(
-        oatpp::network::server::SimpleTCPConnectionProvider::createShared(port)
+      oatpp::network::server::SimpleTCPConnectionProvider::createShared(m_port)
     );
   }());
 
@@ -48,22 +54,19 @@ oatpp::test::web::ClientServerTestRunner WebRunner::create(int port) {
     return oatpp::parser::json::mapping::ObjectMapper::createShared();
   }());
 
-  OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::network::ClientConnectionProvider>, clientConnectionProvider)([port] {
+  OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::network::ClientConnectionProvider>, clientConnectionProvider)([this] {
 
-    if(port == 0) {
+    if(m_port == 0) {
       OATPP_COMPONENT(std::shared_ptr<oatpp::network::virtual_::Interface>, interface);
       return std::static_pointer_cast<oatpp::network::ClientConnectionProvider>(
-          oatpp::network::virtual_::client::ConnectionProvider::createShared(interface)
+        oatpp::network::virtual_::client::ConnectionProvider::createShared(interface)
       );
     }
 
     return std::static_pointer_cast<oatpp::network::ClientConnectionProvider>(
-        oatpp::network::client::SimpleTCPConnectionProvider::createShared("127.0.0.1", port)
+      oatpp::network::client::SimpleTCPConnectionProvider::createShared("127.0.0.1", m_port)
     );
 
   }());
 
-
-  oatpp::test::web::ClientServerTestRunner runner;
-  return runner;
-}
+};
