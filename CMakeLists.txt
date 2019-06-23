@@ -4,6 +4,7 @@ project(oatpp_test)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+SET(CMAKE_CXX_FLAGS     " -pthread")
 
 
 include_directories(include)
@@ -16,7 +17,7 @@ file(GLOB_RECURSE oatpp_test_SOURCE src/*.c* src/*.h*)
 target_sources(oatpp_test PUBLIC ${oatpp_test_SOURCE})
 
 include_directories(test)
-add_executable(oatpp_test_test test/Client.hpp test/TestConfig.hpp)
+add_executable(oatpp_test_test test/TestClient.hpp test/TestComponents.hpp)
 file(GLOB_RECURSE oatpp_test_test_SOURCE test/*.c* test/*.h*)
 target_sources(oatpp_test_test PUBLIC ${oatpp_test_test_SOURCE})
 target_link_libraries(oatpp_test_test PUBLIC oatpp_test oatpp oatpp-test)

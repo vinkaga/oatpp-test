@@ -10,9 +10,9 @@
  * Test API client.
  * Use this client to call application APIs.
  */
-class Client : public oatpp::web::client::ApiClient {
+class TestClient: public oatpp::web::client::ApiClient {
 
-  API_CLIENT_INIT(Client)
+  API_CLIENT_INIT(TestClient)
 
   API_CALL("GET", "/", getRoot)
 

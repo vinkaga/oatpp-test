@@ -13,9 +13,7 @@ using namespace oatpp::web::protocol::http;
 /**
  *  Root Controller
  */
-class Controller : public ApiController {
-public:
-  typedef Controller __ControllerType;
+class Controller: public ApiController {
 public:
 
   explicit Controller(const shared_ptr<ObjectMapper>& objectMapper): ApiController(objectMapper) {}
@@ -29,11 +27,8 @@ public:
  */
 #include OATPP_CODEGEN_BEGIN(ApiController)
 
-  ENDPOINT_ASYNC("GET", "/", Root) {
-    ENDPOINT_ASYNC_INIT(Root)
-    Action act() override {
-      return _return(controller->createResponse(Status::CODE_200, ""));
-    }
+  ENDPOINT("GET", "/", Root) {
+    return createResponse(Status::CODE_200, "");
   };
 
 /**
