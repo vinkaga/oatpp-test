@@ -12,8 +12,6 @@
 #include "oatpp/core/macro/component.hpp"
 
 class TestComponents {
-private:
-  v_int32 m_port;
 public:
 
   OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::network::virtual_::Interface>, virtualInterface)([] {
