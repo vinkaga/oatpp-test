@@ -7,8 +7,6 @@
 #include "oatpp/core/macro/component.hpp"
 #include "oatpp/parser/json/mapping/ObjectMapper.hpp"
 
-using std::shared_ptr;
-using oatpp::String;
 using namespace oatpp::web::server::api;
 using namespace oatpp::web::protocol::http;
 
@@ -18,7 +16,10 @@ using namespace oatpp::web::protocol::http;
 class Controller: public ApiController {
 
 private:
-  shared_ptr<StaticFilesManager> staticFileManager;
+  std::shared_ptr<StaticFilesManager> staticFileManager;
+  std::shared_ptr<outgoing::Response> workerFile(const oatpp::String &file) const;
+  std::shared_ptr<outgoing::Response> workerRange(const oatpp::String &rangeStr, const oatpp::String &file) const;
+  std::shared_ptr<outgoing::Response> getStatic(const std::shared_ptr<incoming::Request> &request) const;
 
 public:
   explicit Controller(): ApiController(oatpp::parser::json::mapping::ObjectMapper::createShared()) {
@@ -32,6 +33,13 @@ public:
 
   ENDPOINT("GET", "/", Root) {
     return createResponse(Status::CODE_200, "");
+  };
+
+  /**
+    *  Static content
+    */
+  ENDPOINT("GET", "/*", Static, REQUEST(std::shared_ptr<IncomingRequest>, request)) {
+    return getStatic(request);
   };
 
 /**

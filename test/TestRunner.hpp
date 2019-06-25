@@ -1,11 +1,4 @@
 #pragma once
-#include "oatpp/web/server/api/ApiController.hpp"
-#include "oatpp/web/server/HttpRouter.hpp"
-
-#include "oatpp/network/server/Server.hpp"
-#include "oatpp/network/ConnectionProvider.hpp"
-
-#include "oatpp/core/macro/component.hpp"
 
 #include <list>
 #include <chrono>

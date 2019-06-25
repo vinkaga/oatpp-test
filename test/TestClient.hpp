@@ -36,8 +36,7 @@ public:
 #include OATPP_CODEGEN_BEGIN(ApiClient)
 
   API_CALL("GET", "/", getRoot)
-
-  // TODO - add more client API calls here
+  API_CALL("GET", "/tmp.json", getStatic)
 
 };
 
