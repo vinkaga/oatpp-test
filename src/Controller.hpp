@@ -1,9 +1,11 @@
 #pragma once
 
+#include "StaticFilesManager.hpp"
 #include "oatpp/web/server/api/ApiController.hpp"
 #include "oatpp/core/data/mapping/ObjectMapper.hpp"
 #include "oatpp/core/macro/codegen.hpp"
 #include "oatpp/core/macro/component.hpp"
+#include "oatpp/parser/json/mapping/ObjectMapper.hpp"
 
 using std::shared_ptr;
 using oatpp::String;
@@ -14,12 +16,13 @@ using namespace oatpp::web::protocol::http;
  *  Root Controller
  */
 class Controller: public ApiController {
+
+private:
+  shared_ptr<StaticFilesManager> staticFileManager;
+
 public:
-
-  explicit Controller(const shared_ptr<ObjectMapper>& objectMapper): ApiController(objectMapper) {}
-
-  static shared_ptr<Controller> createShared(OATPP_COMPONENT(shared_ptr<ObjectMapper>, objectMapper)) {
-    return std::make_shared<Controller>(objectMapper);
+  explicit Controller(): ApiController(oatpp::parser::json::mapping::ObjectMapper::createShared()) {
+    staticFileManager = std::make_shared<StaticFilesManager>("/tmp");
   }
 
 /**
