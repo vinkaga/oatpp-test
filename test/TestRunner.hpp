@@ -23,6 +23,8 @@ public:
       const std::chrono::duration<v_int64, std::micro> &timeout = std::chrono::hours(12)
   ) {
 
+    oatpp::base::Environment::init();
+
     auto startTime = std::chrono::system_clock::now();
     bool running = true;
     std::mutex timeoutMutex;
@@ -68,6 +70,8 @@ public:
     running = false;
     timeoutCondition.notify_one();
     timerThread.join();
+
+    oatpp::base::Environment::destroy();
   }
 
 };
